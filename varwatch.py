@@ -1,5 +1,8 @@
 import cgi
-import reprlib
+try:
+    import reprlib #Python 3
+except:
+    import repr as reprlib # Python2
 from IPython.display import Javascript, display, HTML
 __ip = None
 html_content = """
