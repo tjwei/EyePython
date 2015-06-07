@@ -12,7 +12,7 @@ table, th, td {
     opacity: 0.7;
     position: fixed;
     height: auto;
-    width: 500px;
+    width: 30%;
     right: 0;
     top:0;
     z-index: 1000;
