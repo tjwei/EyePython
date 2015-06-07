@@ -1,4 +1,5 @@
 import cgi
+import reprlib
 from IPython.display import Javascript, display, HTML
 __ip = None
 html_content = """
@@ -68,7 +69,7 @@ def var_str():
     for vname,var,vtype in zip(varnames,varlist,typelist):
         ent = [vname, vtype] 
         if vtype in seq_types:
-            txt.append(ent+["n="+str(len(var))])
+            txt.append(ent+[reprlib.repr(var)+" len="+str(len(var))])
         elif vtype == ndarray_type:
             vshape = str(var.shape).replace(',','').replace(' ','x')[1:-1]
             if vtype==ndarray_type:
@@ -103,13 +104,23 @@ def update_watcher(last_vars=dict()):
     var_list = var_str()
     var_changes = dict()
     next_vars = dict()
+    
     for tr in var_list:
         next_vars[tr[0]]=(tr[1], tr[2])
         if tr[0] not in last_vars:
             var_changes[tr[0]]=(1,1,1)
         else:
             var_changes[tr[0]]=(0,next_vars[tr[0]][0]!=last_vars[tr[0]][0],next_vars[tr[0]][1]!=last_vars[tr[0]][1])
-    for tr in var_list:
+            
+    var_iter = iter(var_list)
+    tr = next(var_iter)
+    vhtml+= "<tr>"
+    for th in tr:
+        #style = ""
+        style=" style='color: #0f0;background: #555'"
+        vhtml+="<th%s>"%style+cgi.escape(str(th))+"</th>"
+    vhtml+="</tr>\n"
+    for tr in var_iter:
         vhtml+= "<tr>"
         changes = var_changes[tr[0]]
         for i, td in enumerate(tr):
@@ -125,7 +136,8 @@ def update_watcher(last_vars=dict()):
 
 def load_ipython_extension(ipython):
     global __ip
-    print(ipython)
+    a = reprlib.aRepr
+    a.maxdict = a.maxlist = a.maxtuple = a.maxset = a.maxfrozenset = a.maxdeque = a.maxarray = 20
     __ip=ipython
     display(HTML(html_content))
     ipython.events.register('post_execute', update_watcher)
