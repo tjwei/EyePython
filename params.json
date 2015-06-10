@@ -1,0 +1,1 @@
+{"name":"Eyepython","tagline":"Floating window variable watcher for IPython Notebook","body":"Compatible for both Python 2.7 and 3.x\r\n\r\nPut the .py file in your python module search path and in your IPython notebook,\r\n```%reload_ext varwatch```","google":"","note":"Don't delete this file! It's used internally to help with page regeneration."}
